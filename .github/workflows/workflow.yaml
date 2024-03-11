@@ -21,20 +21,20 @@ jobs:
         with:
          terraform_version: 1.1.7
 
-      - name: Install Terratest
-        run: go install github.com/gruntwork-io/terratest/modules/terraform@latest
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.8
         
-      - name: Install Checkov
-        run: pip install checkov
-
       - name: Terraform Init
         run: terraform init
 
       - name: Terraform Validate
         run: terraform validate
 
-      - name: Run Terratest
-        run: go test -v ./test
-
-      - name: Run Checkov
-        run: checkov -d .
+      - name: Test with Checkov
+        id: checkov
+        uses: bridgecrewio/checkov-action@master
+        with:
+          directory: .
+          framework: terraform 
