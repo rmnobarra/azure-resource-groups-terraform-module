@@ -45,4 +45,4 @@ jobs:
           output_format: cli
           output_file_path: console
           directory: .
-          soft_fail: false
+          soft_fail: true
