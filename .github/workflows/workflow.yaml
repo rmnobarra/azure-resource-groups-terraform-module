@@ -1,0 +1,40 @@
+name: Terraform Module Test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+         terraform_version: 1.1.7
+
+      - name: Install Terratest
+        run: go get github.com/gruntwork-io/terratest/modules/terraform
+
+      - name: Install Checkov
+        run: pip install checkov
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Run Terratest
+        run: go test -v ./test
+
+      - name: Run Checkov
+        run: checkov -d .
